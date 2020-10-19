@@ -8,6 +8,13 @@ import userController from "../controllers/user.controller";
 let route = express.Router();
 
 // paths
-route.get("/", userController.simple);
+// for making relationship
+route.post("/new", userController.new);
+
+// for getting all relations of specific user
+route.get("/all", userController.all);
+
+// for find possible relation
+route.post("/find", userController.find);
 
 export default route;
