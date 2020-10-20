@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -13,11 +13,17 @@ import AddRelation from "../../components/AddRelation/Add.relation";
 // styles
 import useStyles from "./relations.style";
 
-const Relations = ({ data, setData }) => {
+const Relations = ({ data, setData, index }) => {
   const classes = useStyles();
 
   const [flag, setFlag] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (index !== -1) {
+      setIsOpen(true);
+    }
+  }, [index]);
 
   const onClickHandler = (e) => {
     setIsOpen(true);
@@ -48,6 +54,7 @@ const Relations = ({ data, setData }) => {
               list={data.list}
               relations={data.relations}
               name={data.name}
+              setIsOpen={setIsOpen}
             />
           </Grid>
         )}
@@ -60,6 +67,7 @@ const Relations = ({ data, setData }) => {
 const mapStateToProps = (state) => {
   return {
     data: state.userData,
+    index: state.list,
   };
 };
 

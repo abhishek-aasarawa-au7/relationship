@@ -17,17 +17,25 @@ import httpRequest from "../../configs/axiosConfig";
 import useStyles from "./body.style";
 
 import { SET_NOTIFICATION } from "../../redux/actions/notification.action";
+import { UPDATE_DATA } from "../../redux/actions/user.actions";
 import { apiUrl } from "../../configs/apiURL";
 
-const Body = ({ setNotification, setIsOpen }) => {
+const Body = ({ setNotification, setIsOpen, index, userData, updateData }) => {
   const classes = useStyles();
 
   const formik = useFormik({
-    initialValues: {
-      firstPerson: "",
-      secPerson: "",
-      relation: "",
-    },
+    initialValues:
+      index === -1
+        ? {
+            firstPerson: "",
+            secPerson: "",
+            relation: "",
+          }
+        : {
+            firstPerson: userData.name,
+            secPerson: userData.list[index].name,
+            relation: userData.relations[index],
+          },
 
     validationSchema: Yup.object({
       firstPerson: Yup.string()
@@ -50,8 +58,18 @@ const Body = ({ setNotification, setIsOpen }) => {
 
   // formik input handle
   let onChangeHandle = (e) => {
-    formik.setFieldTouched(e.target.id);
-    return formik.handleChange(e);
+    if (
+      index !== -1 &&
+      e.target.id !== "firstPerson" &&
+      e.target.id !== "secPerson"
+    ) {
+      formik.setFieldTouched(e.target.id);
+      return formik.handleChange(e);
+    }
+    if (index === -1) {
+      formik.setFieldTouched(e.target.id);
+      return formik.handleChange(e);
+    }
   };
 
   // on click submit
@@ -66,8 +84,13 @@ const Body = ({ setNotification, setIsOpen }) => {
 
       let response = await httpRequest({
         method: "POST",
-        url: `${apiUrl}/users/new`,
+        url: index === -1 ? `${apiUrl}/users/new` : `${apiUrl}/users/update`,
         data,
+      });
+
+      updateData({
+        index,
+        relation: formik.values.relation,
       });
 
       setIsOpen(false);
@@ -78,6 +101,7 @@ const Body = ({ setNotification, setIsOpen }) => {
         severity: "success",
       });
     } catch (err) {
+      console.log(err);
       setNotification({
         open: true,
         msg: !!err.response ? err.response.data.msg : "Sorry! Server is down",
@@ -95,7 +119,7 @@ const Body = ({ setNotification, setIsOpen }) => {
           <CreateIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add Relation
+          {index === -1 ? "Add Relation" : "Update Relation"}
         </Typography>
 
         <form className={classes.form} noValidate onSubmit={onFormSubmit}>
@@ -109,6 +133,7 @@ const Body = ({ setNotification, setIsOpen }) => {
             name="firstPerson"
             autoComplete="firstPerson"
             onChange={onChangeHandle}
+            value={formik.values.firstPerson}
             error={formik.errors.firstPerson && formik.touched.firstPerson}
             helperText={formik.errors.firstPerson}
             autoFocus
@@ -122,6 +147,7 @@ const Body = ({ setNotification, setIsOpen }) => {
             label="To Person"
             type="secPerson"
             id="secPerson"
+            value={formik.values.secPerson}
             onChange={onChangeHandle}
             error={formik.errors.secPerson && formik.touched.secPerson}
             helperText={formik.errors.secPerson}
@@ -137,6 +163,7 @@ const Body = ({ setNotification, setIsOpen }) => {
             type="relation"
             id="relation"
             onChange={onChangeHandle}
+            value={formik.values.relation}
             error={formik.errors.relation && formik.touched.relation}
             helperText={formik.errors.relation}
             autoComplete="current-relation"
@@ -149,12 +176,19 @@ const Body = ({ setNotification, setIsOpen }) => {
             className={classes.submit}
             disabled={!!formik.errors.firstPerson || !!formik.errors.secPerson}
           >
-            CREATE
+            {index === -1 ? "CREATE" : "UPDATE"}
           </Button>
         </form>
       </div>
     </Container>
   );
+};
+
+const mapStateToProps = (state) => {
+  return {
+    index: state.list,
+    userData: state.userData,
+  };
 };
 
 const mapActionToProps = (dispatch) => {
@@ -165,7 +199,13 @@ const mapActionToProps = (dispatch) => {
         payload: { ...data },
       });
     },
+    updateData: (data) => {
+      dispatch({
+        type: UPDATE_DATA,
+        payload: data,
+      });
+    },
   };
 };
 
-export default connect(null, mapActionToProps)(Body);
+export default connect(mapStateToProps, mapActionToProps)(Body);

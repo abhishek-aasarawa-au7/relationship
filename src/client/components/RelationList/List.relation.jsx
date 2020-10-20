@@ -9,6 +9,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
 import { map } from "lodash";
+import { connect } from "react-redux";
+
+import { UPDATE_INDEX } from "../../redux/actions/list.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RelationList = ({ list, relations, name }) => {
-  console.log(list, relations);
+const RelationList = ({ list, relations, name, setIndex }) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +45,11 @@ const RelationList = ({ list, relations, name }) => {
                     secondary={relations[idx]}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => setIndex(idx)}
+                    >
                       <CreateIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -57,4 +63,14 @@ const RelationList = ({ list, relations, name }) => {
   );
 };
 
-export default RelationList;
+const mapActionToProps = (dispatch) => {
+  return {
+    setIndex: (idx) =>
+      dispatch({
+        type: UPDATE_INDEX,
+        payload: idx,
+      }),
+  };
+};
+
+export default connect(null, mapActionToProps)(RelationList);
