@@ -1,3 +1,5 @@
+import { isEqual } from "lodash";
+
 import userModel from "../models/users.model";
 
 const allPathUtils = async (u, d, visited, path, all) => {
@@ -7,7 +9,7 @@ const allPathUtils = async (u, d, visited, path, all) => {
 
   if (u.name === d.name) {
     let paths = [...path];
-    all.push(paths);
+    if (!isEqual(all[all.length - 1], paths)) all.push(paths);
   } else {
     u = await userModel
       .findOne({ name: u.name })

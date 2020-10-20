@@ -40,13 +40,6 @@ export const findRelationChecker = [
     .trim()
     .isLength({ min: 2, max: 30 })
     .withMessage("name must be between 2 to 30 char long"),
-
-  check("relation")
-    .exists()
-    .withMessage("Please provide relation")
-    .trim()
-    .isLength({ min: 2, max: 20 })
-    .withMessage("relation must be between 2 to 20 char long"),
 ];
 
 export const errorChecker = (req, res, next) => {
