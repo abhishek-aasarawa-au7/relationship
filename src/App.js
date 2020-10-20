@@ -10,6 +10,9 @@ import theme from "./project.theme";
 // routes
 import routes from "./client/routes";
 
+// components
+import Notification from "./client/components/Notification/Notification";
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -19,6 +22,7 @@ function App() {
             return <Route {...route} key={idx} />;
           })}
         </Switch>
+        <Notification />
       </Container>
     </ThemeProvider>
   );

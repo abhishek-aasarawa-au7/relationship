@@ -45,8 +45,14 @@ controller.all = catchError(async (req, res, next) => {
   // if not found
   if (!user) return response(res, [], `${name} is not in database`, true, 404);
 
+  let data = {
+    name: user.name,
+    list: user.relationWith,
+    relations: user.relation,
+  };
+
   // if found
-  response(res, user, `Relations of ${name}`, false, 200);
+  response(res, data, `Relations of ${name}`, false, 200);
 });
 
 // finding degree of relationship

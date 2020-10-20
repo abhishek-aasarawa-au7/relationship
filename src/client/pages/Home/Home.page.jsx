@@ -33,27 +33,17 @@ const Home = ({ history }) => {
         container
         spacing={2}
         direction="row"
-        justify="space-evenly"
-        alignItems="flex-start"
+        justify="center"
+        alignItems="center"
       >
-        <Grid item className={classes.details}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={onCreateClick}
-          >
+        <Grid className={classes.details}>
+          <Button variant="contained" color="inherit" onClick={onCreateClick}>
             CREATE RELATIONS
           </Button>
         </Grid>
 
-        <Grid item className={classes.details}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={onFindClick}
-          >
+        <Grid className={classes.details}>
+          <Button variant="contained" color="inherit" onClick={onFindClick}>
             FIND RELATIONS
           </Button>
         </Grid>

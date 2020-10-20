@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { connect } from "react-redux";
 
 // style
 import useStyles from "./relation.find.style";
@@ -12,7 +13,10 @@ import useStyles from "./relation.find.style";
 // http request
 import httpRequest from "../../configs/axiosConfig";
 
-const SearchRelation = ({ setList }) => {
+import { SET_NOTIFICATION } from "../../redux/actions/notification.action";
+import { apiUrl } from "../../configs/apiURL";
+
+const SearchRelation = ({ setList, setNotification }) => {
   const classes = useStyles();
 
   // data validation
@@ -53,14 +57,24 @@ const SearchRelation = ({ setList }) => {
 
       let response = await httpRequest({
         method: "POST",
-        url: "http://localhost:5000/api/users/find",
+        url: `${apiUrl}/users/find`,
         data,
+      });
+
+      setNotification({
+        open: true,
+        severity: "success",
+        msg: response.data.msg,
       });
 
       // setting state
       setList(response.data.data);
     } catch (err) {
-      console.dir(err);
+      setNotification({
+        open: true,
+        msg: !!err.response ? err.response.data.msg : "Sorry! Server is down",
+        severity: "error",
+      });
     }
   };
 
@@ -112,7 +126,7 @@ const SearchRelation = ({ setList }) => {
       </Grid>
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
         size="medium"
         type="submit"
         className={classes.button}
@@ -125,4 +139,15 @@ const SearchRelation = ({ setList }) => {
   );
 };
 
-export default SearchRelation;
+const mapActionToProps = (dispatch) => {
+  return {
+    setNotification: (data) => {
+      dispatch({
+        type: SET_NOTIFICATION,
+        payload: { ...data },
+      });
+    },
+  };
+};
+
+export default connect(null, mapActionToProps)(SearchRelation);
