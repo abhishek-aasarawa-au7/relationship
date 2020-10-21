@@ -27,31 +27,31 @@ const Body = ({ setNotification, setIsOpen, index, userData, updateData }) => {
     initialValues:
       index === -1
         ? {
-          firstPerson: "",
-          secPerson: "",
-          relation: "",
-        }
+            firstPerson: "",
+            secPerson: "",
+            relation: "",
+          }
         : {
-          firstPerson: userData.name,
-          secPerson: userData.list[index].name,
-          relation: userData.relations[index],
-        },
+            firstPerson: userData.name,
+            secPerson: userData.list[index].name,
+            relation: userData.relations[index],
+          },
 
     validationSchema: Yup.object({
       firstPerson: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
       secPerson: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
       relation: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
     }),
   });
@@ -101,10 +101,12 @@ const Body = ({ setNotification, setIsOpen, index, userData, updateData }) => {
         severity: "success",
       });
     } catch (err) {
-      console.log(err);
       setNotification({
         open: true,
-        msg: !!err.response && !!err.response.data ? err.response.data.msg : "Sorry! Server is down",
+        msg:
+          !!err.response && !!err.response.data
+            ? err.response.data.msg
+            : "Sorry! Server is down",
         severity: "error",
       });
     }

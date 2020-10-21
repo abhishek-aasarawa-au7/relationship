@@ -29,7 +29,7 @@ const SearchName = ({ setData, setFlag, setNotification }) => {
       name: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
     }),
   });
@@ -62,7 +62,10 @@ const SearchName = ({ setData, setFlag, setNotification }) => {
       } catch (err) {
         setFlag(false);
         setNotification({
-          msg: !!err.response ? err.response.data.msg : "Sorry! Server is down",
+          msg:
+            !!err.response && !!err.response.data
+              ? err.response.data.msg
+              : "Sorry! Server is down",
           open: true,
           severity: "error",
         });

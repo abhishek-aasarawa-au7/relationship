@@ -30,12 +30,12 @@ const SearchRelation = ({ setList, setNotification }) => {
       firstPerson: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
       secPerson: Yup.string()
         .trim()
         .min(2, "Mininum 2 characters")
-        .max(10, "Maximum 30 characters")
+        .max(30, "Maximum 30 characters")
         .required("Required!"),
     }),
   });
@@ -72,7 +72,10 @@ const SearchRelation = ({ setList, setNotification }) => {
     } catch (err) {
       setNotification({
         open: true,
-        msg: !!err.response ? err.response.data.msg : "Sorry! Server is down",
+        msg:
+          !!err.response && !!err.response.data
+            ? err.response.data.msg
+            : "Sorry! Server is down",
         severity: "error",
       });
     }
