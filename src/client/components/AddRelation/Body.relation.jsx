@@ -27,15 +27,15 @@ const Body = ({ setNotification, setIsOpen, index, userData, updateData }) => {
     initialValues:
       index === -1
         ? {
-            firstPerson: "",
-            secPerson: "",
-            relation: "",
-          }
+          firstPerson: "",
+          secPerson: "",
+          relation: "",
+        }
         : {
-            firstPerson: userData.name,
-            secPerson: userData.list[index].name,
-            relation: userData.relations[index],
-          },
+          firstPerson: userData.name,
+          secPerson: userData.list[index].name,
+          relation: userData.relations[index],
+        },
 
     validationSchema: Yup.object({
       firstPerson: Yup.string()
@@ -104,7 +104,7 @@ const Body = ({ setNotification, setIsOpen, index, userData, updateData }) => {
       console.log(err);
       setNotification({
         open: true,
-        msg: !!err.response ? err.response.data.msg : "Sorry! Server is down",
+        msg: !!err.response && !!err.response.data ? err.response.data.msg : "Sorry! Server is down",
         severity: "error",
       });
     }
